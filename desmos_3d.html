@@ -1,16 +1,20 @@
-<script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=72c2649e438c488884a0dd1ec0578ac6"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Desmos 3D Test</title>
+    <script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=72c2649e438c488884a0dd1ec0578ac6"></script>
+</head>
+<body>
+    <div id="calculator" style="width: 100vw; height: 100vh;"></div>
 
-<div id="calculator" style="width: 100%; height: 500px; border: 1px solid #ccc;"></div>
+    <script>
+        var elt = document.getElementById('calculator');
+        // 核心修正：建構子必須是 Calculator3D
+        var calculator = Desmos.Calculator3D(elt);
 
-<script>
-    var elt = document.getElementById('calculator');
-    // 初始化為 3D 模式
-    var calculator = Desmos.Calculator3D(elt);;
-
-    // 額外功能：自動加入一個漂亮的 3D 方程式
-    calculator.setExpression({ 
-        id: 'graph1', 
-        latex: 'z = \\sin(x) \\cdot \cos(y)',
-        color: Desmos.Colors.BLUE 
-    });
-</script>
+        // 加一個預設算式，讓畫面一打開就有東西
+        calculator.setExpression({ id: 'graph1', latex: 'z=\\sin(x)\\cos(y)' });
+    </script>
+</body>
+</html>
