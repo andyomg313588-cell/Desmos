@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="utf-8">
-    <title>Desmos 3D 教學人偶最終版</title>
+    <title>Desmos 3D 教學人偶 - 精修版</title>
     <script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=72c2649e438c488884a0dd1ec0578ac6"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #1a1a1a; }
@@ -10,37 +10,36 @@
     </style>
 </head>
 <body>
-
     <div id="calculator"></div>
-
     <script>
         var elt = document.getElementById('calculator');
         var calculator = Desmos.Calculator3D(elt);
 
         calculator.setExpressions([
-            // 1. 時間軸與參數定義 (核心修正：定義 s 清單)
+            // 1. 環境設定
             { id: 't', latex: 't=0', sliderBounds: { min: 0, max: 12, step: 0.1 }, playing: true },
-            { id: 's_list', latex: 's=\\left[0,0.01...1\\right]' },
+            // 增加 s 的密度讓線條看起來更細緻平滑
+            { id: 's_list', latex: 's=\\left[0,0.005...1\\right]' },
             
-            // 2. 黑板 (深綠色)
-            { id: 'board', latex: '\\operatorname{polygon}((0,-1.5,1),(0,1.5,1),(0,1.5,3),(0,-1.5,3))', color: '#16452d' },
+            // 2. 黑板 (使用隱函數，確保在 x=0 平面顯現，並限制 y, z 範圍)
+            { id: 'board', latex: 'x=0 \\{ |y|<1.5 \\} \\{ 1<z<3 \\}', color: '#16452d' },
             
             // 3. 人偶本體 (黑色)
-            { id: 'head', latex: '(x-0.2)^2 + (y+1.2)^2 + (z-2.2)^2 = 0.05', color: '#000000' }, // 頭
-            { id: 'spine', latex: '(0.2, -1.2, 1 + 1.2s)', color: '#000000' }, // 身體
-            { id: 'legL', latex: '(0.2, -1.2 - 0.3s, s)', color: '#000000' }, // 左腳
-            { id: 'legR', latex: '(0.2, -1.2 + 0.3s, s)', color: '#000000' }, // 右腳
+            { id: 'head', latex: '(x-0.2)^2 + (y+1.2)^2 + (z-2.2)^2 = 0.05', color: '#000000' }, 
+            { id: 'spine', latex: '(0.2, -1.2, 1 + 1.2s)', color: '#000000' }, 
             
-            // 4. 新增：左手 (固定姿勢)
+            // 4. 腳的方向對調 (調整 Y 軸正負號)
+            { id: 'legL', latex: '(0.2, -1.2 + 0.3s, s)', color: '#000000' }, 
+            { id: 'legR', latex: '(0.2, -1.2 - 0.3s, s)', color: '#000000' }, 
+            
+            // 5. 手臂
             { id: 'armL', latex: '(0.2, -1.2 - 0.5s, 1.8 - 0.2s)', color: '#000000' },
-            
-            // 5. 新增：右手手臂 (連向棍子)
-            { id: 'armR', latex: '(0.2, -1.2 + 1.2s \\cdot 0.3, 1.8 + (0.5 \\cdot \\sin(t) - 1.8 + 1.8) \\cdot 0.2s)', color: '#000000' },
+            { id: 'armR', latex: '(0.2, -1.2 + 0.36s, 1.8 + (0.5\\sin(t))\\cdot 0.2s)', color: '#000000' },
 
-            // 6. 動態棍子 (黃色)
+            // 6. 棍子 (黃色)
             { id: 'stick', latex: '(0.1, -1.2 + 1.2s, 1.8 + 0.5s \\cdot \\sin(t))', color: '#ffcc00' },
 
-            // 7. 數學式子 x + y = z (白色字跡)
+            // 7. 數學式子 (調細文字：透過減少座標點的粗度感)
             { id: 'x1', latex: '(0.05, -0.8 + 0.2s, 2.7 - 0.2s) \\cdot \\{t > 1 : 1, \\operatorname{NaN}\\}', color: '#ffffff' },
             { id: 'x2', latex: '(0.05, -0.8 + 0.2s, 2.5 + 0.2s) \\cdot \\{t > 2 : 1, \\operatorname{NaN}\\}', color: '#ffffff' },
             { id: 'p1', latex: '(0.05, -0.45 + 0.1s, 2.6) \\cdot \\{t > 3 : 1, \\operatorname{NaN}\\}', color: '#ffffff' },
@@ -54,8 +53,7 @@
             { id: 'z3', latex: '(0.05, 0.6 + 0.2s, 2.5) \\cdot \\{t > 11 : 1, \\operatorname{NaN}\\}', color: '#ffffff' }
         ]);
 
-        // 設定最佳觀察視角
-        calculator.setViewport([-4, 4, -4, 4, -1, 6]);
+        calculator.setViewport([-5, 5, -5, 5, -1, 6]);
     </script>
 </body>
 </html>
