@@ -16,29 +16,30 @@
         var calculator = Desmos.Calculator3D(elt);
 
         calculator.setExpressions([
-    // 1. 基礎變數
+    // 1. 基礎變數與極細字體設定
     { id: 't', latex: 't=0', sliderBounds: { min: 0, max: 12, step: 0.1 }, playing: true },
     { id: 's_list', latex: 's=\\left[0,0.002...1\\right]' },
     
-    // 2. 黑板：使用「網格列表」法，這在 API 中最穩定，不需要手動點擊 add slider
-    { id: 'board_u', latex: 'u=\\left[-1.5,-1.48...1.5\\right]' },
-    { id: 'board_v', latex: 'v=\\left[1,1.02...3\\right]' },
-    { id: 'board', latex: '(0, u, v)', color: '#16452d' },
+    // 2. 核心修正：真正的長方形黑板 (利用網格掃描)
+    // u 控制寬度 (-1.5 到 1.5)，v 控制高度 (1 到 3)
+    { id: 'board_u', latex: 'u = -1.5 + 3s' }, 
+    { id: 'board_v', latex: 'v_1 = \\left[1, 1.05...3\\right]' },
+    { id: 'board', latex: '(0, u, v_1 + 0s)', color: '#16452d' },
     
-    // 3. 人偶本體
+    // 3. 人偶本體 (黑色)
     { id: 'head', latex: '(x-0.2)^2 + (y+1.2)^2 + (z-2.2)^2 = 0.05', color: '#000000' }, 
     { id: 'spine', latex: '(0.2, -1.2, 1 + 1.2s)', color: '#000000' }, 
     
-    // 4. 腳部：倒 V 字型 (修正座標讓頂點在上)
+    // 4. 腳部：倒 V 字型 (頂點在 z=1)
     { id: 'legL', latex: '(0.2, -1.2 - 0.4s, 1 - s)', color: '#000000' }, 
     { id: 'legR', latex: '(0.2, -1.2 + 0.4s, 1 - s)', color: '#000000' }, 
     
-    // 5. 手臂與指引棍
+    // 5. 手臂與黃色指引棍
     { id: 'armL', latex: '(0.2, -1.2 - 0.5s, 1.8 - 0.2s)', color: '#000000' },
     { id: 'armR', latex: '(0.2, -1.2 + 0.36s, 1.8 + (0.5\\sin(t))\\cdot 0.2s)', color: '#000000' },
     { id: 'stick', latex: '(0.1, -1.2 + 1.2s, 1.8 + 0.5s \\cdot \\sin(t))', color: '#ffcc00' },
 
-    // 6. 文字 (極細字體)
+    // 6. 白色極細文字 (x + y = z)
     { id: 'x1', latex: '(0.05, -0.8 + 0.2s, 2.7 - 0.2s) \\cdot \\{t > 1 : 1, \\operatorname{NaN}\\}', color: '#ffffff' },
     { id: 'x2', latex: '(0.05, -0.8 + 0.2s, 2.5 + 0.2s) \\cdot \\{t > 2 : 1, \\operatorname{NaN}\\}', color: '#ffffff' },
     { id: 'p1', latex: '(0.05, -0.45 + 0.1s, 2.6) \\cdot \\{t > 3 : 1, \\operatorname{NaN}\\}', color: '#ffffff' },
