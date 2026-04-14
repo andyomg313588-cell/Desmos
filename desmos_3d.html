@@ -15,46 +15,36 @@
 
     <script>
         var elt = document.getElementById('calculator');
-        // 使用你測試成功的 Calculator3D 建構子
-        var calculator = Desmos.Calculator3D(elt);
+    // 使用你確認可用的建構子
+    var calculator = Desmos.Calculator3D(elt);
 
-        calculator.setExpressions([
-            // 1. 時間軸：控制動畫進度 (0 到 12 秒)
-            { id: 't', latex: 't=0', sliderBounds: { min: 0, max: 12, step: 0.1 }, playing: true },
-            
-            // 2. 黑板：深綠色背景
-            { id: 'board', latex: 'polygon((0,-1.5,1),(0,1.5,1),(0,1.5,3),(0,-1.5,3))', color: '#16452d' },
-            
-            // 3. 人偶：頭部與身體結構
-            { id: 'head', latex: '(x-0.2)^2 + (y+1.2)^2 + (z-2.2)^2 = 0.05', color: '#ffffff' },
-            { id: 'spine', latex: '(0.2, -1.2, 1 + 1.2s)', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            { id: 'legL', latex: '(0.2, -1.2 - 0.3s, s)', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            { id: 'legR', latex: '(0.2, -1.2 + 0.3s, s)', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            
-            // 4. 指引棍：右手拿著棍子，隨 sin(t) 擺動指向黑板
-            { id: 'stick', latex: '(0.1, -1.2 + 1.2s, 1.8 + 0.5s \\cdot \\sin(t))', parametricDomain: { s: { min: 0, max: 1.2 } }, color: '#ffcc00' },
+    calculator.setExpressions([
+        // 1. 時間控制
+        { id: 't', latex: 't=0', sliderBounds: { min: 0, max: 12, step: 0.1 }, playing: true },
+        
+        // 2. 黑板 (Polygon) - 修正語法
+        { id: 'board', latex: '\\operatorname{polygon}((0,-1.5,1),(0,1.5,1),(0,1.5,3),(0,-1.5,3))', color: '#16452d' },
+        
+        // 3. 人偶與棍子 (直接在 API 定義 s 範圍，避免驚嘆號)
+        { id: 'head', latex: '(x-0.2)^2 + (y+1.2)^2 + (z-2.2)^2 = 0.05', color: '#ffffff' },
+        { id: 'spine', latex: '(0.2, -1.2, 1 + 1.2s)', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'legL', latex: '(0.2, -1.2 - 0.3s, s)', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'legR', latex: '(0.2, -1.2 + 0.3s, s)', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'stick', latex: '(0.1, -1.2 + 1.2s, 1.8 + 0.5s \\cdot \\sin(t))', parametricDomain: { s: { min: 0, max: 1.2 } }, color: '#ffcc00' },
 
-            // 5. 數學式子 x + y = z：利用 NaN 邏輯讓字跡隨時間 t 依序出現
-            // 字母 X
-            { id: 'x1', latex: '(0.05, -0.8 + 0.2s, 2.7 - 0.2s) \\cdot \\{t > 1 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            { id: 'x2', latex: '(0.05, -0.8 + 0.2s, 2.5 + 0.2s) \\cdot \\{t > 2 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            // 加號 +
-            { id: 'p1', latex: '(0.05, -0.45 + 0.1s, 2.6) \\cdot \\{t > 3 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            { id: 'p2', latex: '(0.05, -0.4, 2.55 + 0.1s) \\cdot \\{t > 4 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            // 字母 Y
-            { id: 'y1', latex: '(0.05, -0.15 + 0.1s, 2.6 - 0.2s) \\cdot \\{t > 5 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            { id: 'y2', latex: '(0.05, -0.05 - 0.1s, 2.6 - 0.1s) \\cdot \\{t > 6 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            // 等號 =
-            { id: 'e1', latex: '(0.05, 0.2 + 0.2s, 2.65) \\cdot \\{t > 7 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            { id: 'e2', latex: '(0.05, 0.2 + 0.2s, 2.55) \\cdot \\{t > 8 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            // 字母 Z
-            { id: 'z1', latex: '(0.05, 0.6 + 0.2s, 2.7) \\cdot \\{t > 9 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            { id: 'z2', latex: '(0.05, 0.8 - 0.2s, 2.7 - 0.2s) \\cdot \\{t > 10 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
-            { id: 'z3', latex: '(0.05, 0.6 + 0.2s, 2.5) \\cdot \\{t > 11 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' }
-        ]);
-
-        // 設定初始觀察角度
-        calculator.setViewport([-4, 4, -4, 4, -1, 6]);
+        // 4. 動態文字 x + y = z (使用正確的轉義語法)
+        { id: 'x1', latex: '(0.05, -0.8 + 0.2s, 2.7 - 0.2s) \\cdot \\{t > 1 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'x2', latex: '(0.05, -0.8 + 0.2s, 2.5 + 0.2s) \\cdot \\{t > 2 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'p1', latex: '(0.05, -0.45 + 0.1s, 2.6) \\cdot \\{t > 3 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'p2', latex: '(0.05, -0.4, 2.55 + 0.1s) \\cdot \\{t > 4 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'y1', latex: '(0.05, -0.15 + 0.1s, 2.6 - 0.2s) \\cdot \\{t > 5 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'y2', latex: '(0.05, -0.05 - 0.1s, 2.6 - 0.1s) \\cdot \\{t > 6 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'e1', latex: '(0.05, 0.2 + 0.2s, 2.65) \\cdot \\{t > 7 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'e2', latex: '(0.05, 0.2 + 0.2s, 2.55) \\cdot \\{t > 8 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'z1', latex: '(0.05, 0.6 + 0.2s, 2.7) \\cdot \\{t > 9 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'z2', latex: '(0.05, 0.8 - 0.2s, 2.7 - 0.2s) \\cdot \\{t > 10 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' },
+        { id: 'z3', latex: '(0.05, 0.6 + 0.2s, 2.5) \\cdot \\{t > 11 : 1, \\operatorname{NaN}\\}', parametricDomain: { s: { min: 0, max: 1 } }, color: '#ffffff' }
+    ]);
     </script>
 </body>
 </html>
