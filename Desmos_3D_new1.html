@@ -15,25 +15,29 @@
 
     <script>
         var elt = document.getElementById('calculator');
-        // 使用 Calculator3D 建構子
         var calculator = Desmos.Calculator3D(elt);
 
-        // 核心修正：使用全參數式 (Parametric Surface) 定義莫比烏斯環
         calculator.setExpressions([
             { 
-                id: 'mobius', 
-                // 莫比烏斯環的 3D 參數方程 (使用雙反斜線轉義 LaTeX 函數)
+                id: 'mobius_strip', 
+                // LaTeX 參數方程
                 latex: '\\left((1 + \\frac{v}{2}\\cos(\\frac{u}{2}))\\cos(u), (1 + \\frac{v}{2}\\cos(\\frac{u}{2}))\\sin(u), \\frac{v}{2}\\sin(\\frac{u}{2})\\right)', 
                 
-                // 定義參數範圍 (這是關鍵！)
-                // u 從 0 到 2pi 繞一圈
-                // v 從 -1 到 1 定義帶子的寬度
+                // 直接在此輸入 u 與 v 的範圍
                 parametricDomain: { 
                     u: { min: '0', max: '2\\pi' }, 
                     v: { min: '-1', max: '1' } 
                 }, 
                 
-                // 設定顏色為漂亮的亮藍色
+                color: '#3895d3'
+            }
+        ]);
+
+        // 設定初始視角
+        calculator.setViewport([-3, 3, -3, 3, -2, 2]);
+    </script>
+</body>
+</html>
                 color: '#3895d3',
                 // 調整線條粗細 (選用，讓表面網格看起來更細緻)
                 lineWidth: 1
