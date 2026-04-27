@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <title>Desmos 3D Möbius Strip</title>
+    <script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=72c2649e438c488884a0dd1ec0578ac6"></script>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #1a1a1a; }
+        #calculator { width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+
+    <div id="calculator"></div>
+
+    <script>
+        var elt = document.getElementById('calculator');
+        // 使用 Calculator3D 建構子
+        var calculator = Desmos.Calculator3D(elt);
+
+        // 核心修正：使用全參數式 (Parametric Surface) 定義莫比烏斯環
+        calculator.setExpressions([
+            { 
+                id: 'mobius', 
+                // 莫比烏斯環的 3D 參數方程 (使用雙反斜線轉義 LaTeX 函數)
+                latex: '\\left((1 + \\frac{v}{2}\\cos(\\frac{u}{2}))\\cos(u), (1 + \\frac{v}{2}\\cos(\\frac{u}{2}))\\sin(u), \\frac{v}{2}\\sin(\\frac{u}{2})\\right)', 
+                
+                // 定義參數範圍 (這是關鍵！)
+                // u 從 0 到 2pi 繞一圈
+                // v 從 -1 到 1 定義帶子的寬度
+                parametricDomain: { 
+                    u: { min: '0', max: '2\\pi' }, 
+                    v: { min: '-1', max: '1' } 
+                }, 
+                
+                // 設定顏色為漂亮的亮藍色
+                color: '#3895d3',
+                // 調整線條粗細 (選用，讓表面網格看起來更細緻)
+                lineWidth: 1
+            }
+        ]);
+
+        // 設定初始觀察視角，讓它看起來更有立體感
+        calculator.setViewport([-3, 3, -3, 3, -2, 2]);
+    </script>
+</body>
+</html>
+
