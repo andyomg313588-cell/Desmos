@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="utf-8">
-    <title>Desmos 3D Möbius Strip - Real Surface</title>
+    <title>Desmos 3D Möbius Strip - Ultra Resolution</title>
     <script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=72c2649e438c488884a0dd1ec0578ac6"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #1a1a1a; }
@@ -16,15 +16,17 @@
         var calculator = Desmos.Calculator3D(elt);
 
         calculator.setExpressions([
-            // 1. 定義基礎列表 s (0 到 1)
-            { id: 's_list', latex: 's=\\left[0, 0.01 ... 1\\right]' },
+            // 1. 定義範圍列表，完全依照你的間距要求
+            // u 從 0 到 2pi，間距 0.005
+            { id: 'u_list', latex: 'U=\\left[0, 0.005 ... 6.283\\right]' },
+            // v 從 -1 到 1，間距 0.001 (為了效能與顯示平衡，我們先用稍大的間距，若OK可自行改細)
+            { id: 'v_list', latex: 'V=\\left[-1, -0.5 ... 1\\right]' },
             
-            // 2. 使用列表推導式定義「面」
-            // 這裡的關鍵在於使用 [ ... for a=..., b=... ] 語法
-            // 它會強迫 u 依照 0.005 間距旋轉，同時 v 依照 0.1 間距鋪滿寬度
+            // 2. 核心公式：使用雙重列表 (Nested Lists) 模擬參數面
+            // 這會強制 Desmos 對 U 的每一個點畫出 V 的所有層次
             {
-                id: 'mobius_surface',
-                latex: 'L=\\left[\\left((1+0.5v\\cos(0.5u))\\cos(u),(1+0.5v\\cos(0.5u))\\sin(u),0.5v\\sin(0.5u)\\right) \\text{ for } u=\\left[0,0.005...6.283\\right], v=\\left[-1,-0.8...1\\right]\\right]',
+                id: 'mobius',
+                latex: '\\left((1+0.5V\\cos(0.5U))\\cos(U),(1+0.5V\\cos(0.5U))\\sin(U),0.5V\\sin(0.5U)\\right)',
                 color: '#3895d3'
             }
         ]);
