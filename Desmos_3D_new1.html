@@ -15,16 +15,11 @@
         var elt = document.getElementById('calculator');
         var calculator = Desmos.Calculator3D(elt);
 
-        // 使用單個運算式設定，確保範圍被強制執行
         calculator.setExpression({
-            id: 'mobius',
-            latex: '\\left((1+0.5v\\cos(0.5u))\\cos(u),(1+0.5v\\cos(0.5u))\\sin(u),0.5v\\sin(0.5u)\\right)',
-            // 嘗試將 min/max 改為純數字或特定格式字串
-            parametricDomain: {
-                u: { min: '0', max: '6.283185' }, // 直接給 pi 的近似值
-                v: { min: '-1', max: '1' }
-            },
-            color: '#3895d3'
+        id: 'mobius',
+        // 將範圍直接寫在算式末端，這會強制 Desmos 執行
+        latex: '\\left((1+0.5v\\cos(0.5u))\\cos(u),(1+0.5v\\cos(0.5u))\\sin(u),0.5v\\sin(0.5u)\\right)\\{0<u<6.283\\}\\{-1<v<1\\}',
+        color: '#3895d3'
         });
 
         calculator.setViewport([-3, 3, -3, 3, -2, 2]);
