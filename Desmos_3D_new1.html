@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="utf-8">
-    <title>Desmos 3D Möbius Strip - Final Fix</title>
+    <title>Desmos 3D Möbius Strip - 完整穩定版</title>
     <script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=72c2649e438c488884a0dd1ec0578ac6"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #1a1a1a; }
@@ -18,13 +18,14 @@
         var calculator = Desmos.Calculator3D(elt);
 
         calculator.setExpressions([
-            // 1. 強制定義範圍列表 (使用大寫 U 和 V 避開系統預設小寫變數)
-            // U 代表旋轉角度 (0 到 2pi)，V 代表帶子寬度 (-1 到 1)
+            // 1. 強制定義範圍列表：使用大寫 U 和 V 確保範圍直接輸入
+            // U: 旋轉角度 (0 到 2pi)，步長 0.1 確保網格密度
             { id: 'u_range', latex: 'U=\\left[0, 0.1 ... 6.29\\right]' },
+            // V: 帶子寬度 (-1 到 1)，步長 0.4 形成長方形網格感
             { id: 'v_range', latex: 'V=\\left[-1, -0.4 ... 1\\right]' },
             
-            // 2. 核心公式：利用網格組合 (U, V) 畫出連續曲面
-            // 透過末端的 +0V +0U 強迫 Desmos 遍歷所有列表組合，產生面而非點
+            // 2. 核心公式：莫比烏斯環參數方程
+            // 透過末端的 +0V +0U 強迫渲染器遍歷所有組合，生成「面」
             {
                 id: 'mobius',
                 latex: '\\left((1+0.5V\\cos(0.5U))\\cos(U),(1+0.5V\\cos(0.5U))\\sin(U),0.5V\\sin(0.5U)\\right) + 0V + 0U',
@@ -33,7 +34,7 @@
             }
         ]);
 
-        // 3. 設定初始視角，讓莫比烏斯環以最佳角度呈現
+        // 3. 設定初始視角
         calculator.setViewport([-3, 3, -3, 3, -2, 2]);
     </script>
 </body>
