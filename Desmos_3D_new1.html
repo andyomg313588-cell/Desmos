@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="utf-8">
-    <title>Desmos 3D Möbius Strip</title>
+    <title>Desmos 3D Möbius Strip - Force Range</title>
     <script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=72c2649e438c488884a0dd1ec0578ac6"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #1a1a1a; }
@@ -10,43 +10,24 @@
     </style>
 </head>
 <body>
-
     <div id="calculator"></div>
-
     <script>
         var elt = document.getElementById('calculator');
         var calculator = Desmos.Calculator3D(elt);
 
-        calculator.setExpressions([
-            { 
-                id: 'mobius_strip', 
-                // LaTeX 參數方程
-                latex: '\\left((1 + \\frac{v}{2}\\cos(\\frac{u}{2}))\\cos(u), (1 + \\frac{v}{2}\\cos(\\frac{u}{2}))\\sin(u), \\frac{v}{2}\\sin(\\frac{u}{2})\\right)', 
-                
-                // 直接在此輸入 u 與 v 的範圍
-                parametricDomain: { 
-                    u: { min: '0', max: '2\\pi' }, 
-                    v: { min: '-1', max: '1' } 
-                }, 
-                
-                color: '#3895d3'
-            }
-        ]);
+        // 使用單個運算式設定，確保範圍被強制執行
+        calculator.setExpression({
+            id: 'mobius',
+            latex: '\\left((1+0.5v\\cos(0.5u))\\cos(u),(1+0.5v\\cos(0.5u))\\sin(u),0.5v\\sin(0.5u)\\right)',
+            // 嘗試將 min/max 改為純數字或特定格式字串
+            parametricDomain: {
+                u: { min: '0', max: '6.283185' }, // 直接給 pi 的近似值
+                v: { min: '-1', max: '1' }
+            },
+            color: '#3895d3'
+        });
 
-        // 設定初始視角
         calculator.setViewport([-3, 3, -3, 3, -2, 2]);
     </script>
 </body>
 </html>
-                color: '#3895d3',
-                // 調整線條粗細 (選用，讓表面網格看起來更細緻)
-                lineWidth: 1
-            }
-        ]);
-
-        // 設定初始觀察視角，讓它看起來更有立體感
-        calculator.setViewport([-3, 3, -3, 3, -2, 2]);
-    </script>
-</body>
-</html>
-
