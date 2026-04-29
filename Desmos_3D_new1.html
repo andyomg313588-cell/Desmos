@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="utf-8">
-    <title>Desmos 3D Möbius Strip - List Method</title>
+    <title>Desmos 3D Möbius Strip - Ultra Fine</title>
     <script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=72c2649e438c488884a0dd1ec0578ac6"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #1a1a1a; }
@@ -16,19 +16,24 @@
         var calculator = Desmos.Calculator3D(elt);
 
         calculator.setExpressions([
-            // 1. 仿照你的 s 寫法，直接定義 U 和 V 的列表範圍
-            { id: 'u_list', latex: 'U=\\left[0, 0.05 ... 6.28\\right]' },
-            { id: 'v_list', latex: 'V=\\left[-1, -0.5 ... 1\\right]' },
+            // 1. 定義 u 的列表，範圍 0 到 2pi，間距 0.005 (這會產生約 1257 個點)
+            { id: 'u_list', latex: 'u_{list}=\\left[0, 0.005 ... 6.283\\right]' },
             
-            // 2. 參數式算式，直接引用上面的大寫 U 和 V
-            // 加上 +0U 和 +0V 是為了強迫 Desmos 對兩個列表做交集運算，畫出「面」
+            // 2. 定義 v 的列表，範圍 -1 到 1，間距 0.001 (這會產生 2001 個位置)
+            // 注意：在 3D 空間中，我們會讓 v 跟隨一個滑桿或多個截面
+            { id: 'v_range', latex: 'v=\\left[-1, -0.999 ... 1\\right]' },
+            
+            // 3. 莫比烏斯環參數式
+            // 直接引用上述定義的 u_list 與 v (變數名需精確對應)
             {
                 id: 'mobius',
-                latex: '\\left((1+0.5V\\cos(0.5U))\\cos(U),(1+0.5V\\cos(0.5U))\\sin(U),0.5V\\sin(0.5U)\\right) + 0U + 0V',
-                color: '#3895d3'
+                latex: '\\left((1+0.5v\\cos(0.5u_{list}))\\cos(u_{list}),(1+0.5v\\cos(0.5u_{list}))\\sin(u_{list}),0.5v\\sin(0.5u_{list})\\right)',
+                color: '#3895d3',
+                pointSize: 1 // 設定點的大小，讓它看起來更像細緻的表面
             }
         ]);
 
+        // 設定初始視角
         calculator.setViewport([-3, 3, -3, 3, -2, 2]);
     </script>
 </body>
