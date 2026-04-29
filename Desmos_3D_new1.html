@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="utf-8">
-    <title>Desmos 3D Möbius Strip - Hardcoded Range</title>
+    <title>Desmos 3D Möbius Strip - List Method</title>
     <script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=72c2649e438c488884a0dd1ec0578ac6"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #1a1a1a; }
@@ -16,15 +16,16 @@
         var calculator = Desmos.Calculator3D(elt);
 
         calculator.setExpressions([
-            // 使用列表 L 來產生多條帶子，每條帶子都直接寫死 0 < s < 6.29
-            { id: 'list', latex: 'L = \\left[-1, -0.8 ... 1\\right]' },
+            // 1. 仿照你的 s 寫法，直接定義 U 和 V 的列表範圍
+            { id: 'u_list', latex: 'U=\\left[0, 0.05 ... 6.28\\right]' },
+            { id: 'v_list', latex: 'V=\\left[-1, -0.5 ... 1\\right]' },
+            
+            // 2. 參數式算式，直接引用上面的大寫 U 和 V
+            // 加上 +0U 和 +0V 是為了強迫 Desmos 對兩個列表做交集運算，畫出「面」
             {
-                id: 'mobius_fixed',
-                // 關鍵：將範圍 {0 < s < 6.29} 直接寫在算式末端
-                // s 是 Desmos 預設的參數曲線變數，不需要定義就會生效
-                latex: '\\left((1+0.5L\\cos(0.5s))\\cos(s), (1+0.5L\\cos(0.5s))\\sin(s), 0.5L\\sin(0.5s)\\right)\\{0 < s < 6.283\\}',
-                color: '#3895d3',
-                lineWidth: 2
+                id: 'mobius',
+                latex: '\\left((1+0.5V\\cos(0.5U))\\cos(U),(1+0.5V\\cos(0.5U))\\sin(U),0.5V\\sin(0.5U)\\right) + 0U + 0V',
+                color: '#3895d3'
             }
         ]);
 
