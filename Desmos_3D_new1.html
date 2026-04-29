@@ -13,16 +13,27 @@
     <div id="calculator"></div>
     <script>
         var elt = document.getElementById('calculator');
-        var calculator = Desmos.Calculator3D(elt);
+var calculator = Desmos.Calculator3D(elt);
 
-        calculator.setExpression({
+calculator.setExpressions([
+    // 第一步：強制定義 u 的範圍與預設值
+    { id: 'u_val', latex: 'u=0', sliderBounds: { min: '0', max: '2\\pi' } },
+    // 第二步：強制定義 v 的範圍與預設值
+    { id: 'v_val', latex: 'v=0', sliderBounds: { min: '-1', max: '1' } },
+    // 第三步：繪製莫比烏斯環本體
+    {
         id: 'mobius',
-        // 將範圍直接寫在算式末端，這會強制 Desmos 執行
-        latex: '\\left((1+0.5v\\cos(0.5u))\\cos(u),(1+0.5v\\cos(0.5u))\\sin(u),0.5v\\sin(0.5u)\\right)\\{0<u<6.283\\}\\{-1<v<1\\}',
+        latex: '\\left((1+0.5v\\cos(0.5u))\\cos(u),(1+0.5v\\cos(0.5u))\\sin(u),0.5v\\sin(0.5u)\\right)',
+        // 關鍵：使用 parametricDomain 配合上述 slider 定義
+        parametricDomain: {
+            u: { min: '0', max: '2\\pi' },
+            v: { min: '-1', max: '1' }
+        },
         color: '#3895d3'
-        });
+    }
+]);
 
-        calculator.setViewport([-3, 3, -3, 3, -2, 2]);
+calculator.setViewport([-3, 3, -3, 3, -2, 2]);
     </script>
 </body>
 </html>
