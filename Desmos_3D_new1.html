@@ -16,19 +16,18 @@
 var calculator = Desmos.Calculator3D(elt);
 
 calculator.setExpressions([
-    // 第一步：強制定義 u 的範圍與預設值
-    { id: 'u_val', latex: 'u=0', sliderBounds: { min: '0', max: '2\\pi' } },
-    // 第二步：強制定義 v 的範圍與預設值
-    { id: 'v_val', latex: 'v=0', sliderBounds: { min: '-1', max: '1' } },
-    // 第三步：繪製莫比烏斯環本體
     {
         id: 'mobius',
+        // 1. 純數學公式，不要在裡面寫範圍
         latex: '\\left((1+0.5v\\cos(0.5u))\\cos(u),(1+0.5v\\cos(0.5u))\\sin(u),0.5v\\sin(0.5u)\\right)',
-        // 關鍵：使用 parametricDomain 配合上述 slider 定義
+        
+        // 2. 這才是「直接輸入範圍」的核心，API 會自動把這些數值填入左側的定義域中
         parametricDomain: {
             u: { min: '0', max: '2\\pi' },
             v: { min: '-1', max: '1' }
         },
+        
+        // 3. 確保不要有 id 為 'u' 或 'v' 的其他 expression，否則會變回點
         color: '#3895d3'
     }
 ]);
