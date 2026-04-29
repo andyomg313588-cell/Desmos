@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="utf-8">
-    <title>Desmos 3D Möbius Strip - 完整穩定版</title>
+    <title>Desmos 3D Möbius Strip - 穩定完整版</title>
     <script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=72c2649e438c488884a0dd1ec0578ac6"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #1a1a1a; }
@@ -15,20 +15,21 @@
 
     <script>
         var elt = document.getElementById('calculator');
+        // 使用 3D 建構子
         var calculator = Desmos.Calculator3D(elt);
 
         calculator.setExpressions([
-            // 1. 強制定義範圍列表：使用大寫 U 和 V 確保範圍直接輸入
-            // U: 旋轉角度 (0 到 2pi)，步長 0.1 確保網格密度
-            { id: 'u_range', latex: 'U=\\left[0, 0.1 ... 6.29\\right]' },
-            // V: 帶子寬度 (-1 到 1)，步長 0.4 形成長方形網格感
-            { id: 'v_range', latex: 'V=\\left[-1, -0.4 ... 1\\right]' },
+            // 1. 強制定義範圍列表：解決「範圍沒寫到」的問題
+            // U: 旋轉角度 (0 到 2pi)，使用列表強制 Desmos 讀取範圍
+            { id: 'u_range', latex: 'U=\\left[0,0.1...6.29\\right]' },
+            // V: 帶子寬度 (-1 到 1)，步長決定網格的長方形感
+            { id: 'v_range', latex: 'V=\\left[-1,-0.6...1\\right]' },
             
-            // 2. 核心公式：莫比烏斯環參數方程
-            // 透過末端的 +0V +0U 強迫渲染器遍歷所有組合，生成「面」
+            // 2. 核心公式：解決「變成單點」與「解析錯誤」
+            // 修正 LaTeX 語法，確保括號正確轉義且末端加上 +0U+0V 產生曲面網格
             {
                 id: 'mobius',
-                latex: '\\left((1+0.5V\\cos(0.5U))\\cos(U),(1+0.5V\\cos(0.5U))\\sin(U),0.5V\\sin(0.5U)\\right) + 0V + 0U',
+                latex: '\\left((1+0.5V\\cos(0.5U))\\cos(U),(1+0.5V\\cos(0.5U))\\sin(U),0.5V\\sin(0.5U)\\right)+0U+0V',
                 color: '#3895d3',
                 lineWidth: 2
             }
