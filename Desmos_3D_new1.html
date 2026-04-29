@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="utf-8">
-    <title>Desmos 3D Möbius Strip - Force Range</title>
+    <title>Desmos 3D Möbius Strip - Final Fix</title>
     <script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=72c2649e438c488884a0dd1ec0578ac6"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #1a1a1a; }
@@ -10,29 +10,31 @@
     </style>
 </head>
 <body>
+
     <div id="calculator"></div>
+
     <script>
         var elt = document.getElementById('calculator');
-var calculator = Desmos.Calculator3D(elt);
+        var calculator = Desmos.Calculator3D(elt);
 
-calculator.setExpressions([
-    {
-        id: 'mobius',
-        // 1. 純數學公式，不要在裡面寫範圍
-        latex: '\\left((1+0.5v\\cos(0.5u))\\cos(u),(1+0.5v\\cos(0.5u))\\sin(u),0.5v\\sin(0.5u)\\right)',
-        
-        // 2. 這才是「直接輸入範圍」的核心，API 會自動把這些數值填入左側的定義域中
-        parametricDomain: {
-            u: { min: '0', max: '2\\pi' },
-            v: { min: '-1', max: '1' }
-        },
-        
-        // 3. 確保不要有 id 為 'u' 或 'v' 的其他 expression，否則會變回點
-        color: '#3895d3'
-    }
-]);
+        calculator.setExpressions([
+            // 1. 強制定義範圍列表 (使用大寫 U 和 V 避開系統預設小寫變數)
+            // U 代表旋轉角度 (0 到 2pi)，V 代表帶子寬度 (-1 到 1)
+            { id: 'u_range', latex: 'U=\\left[0, 0.1 ... 6.29\\right]' },
+            { id: 'v_range', latex: 'V=\\left[-1, -0.4 ... 1\\right]' },
+            
+            // 2. 核心公式：利用網格組合 (U, V) 畫出連續曲面
+            // 透過末端的 +0V +0U 強迫 Desmos 遍歷所有列表組合，產生面而非點
+            {
+                id: 'mobius',
+                latex: '\\left((1+0.5V\\cos(0.5U))\\cos(U),(1+0.5V\\cos(0.5U))\\sin(U),0.5V\\sin(0.5U)\\right) + 0V + 0U',
+                color: '#3895d3',
+                lineWidth: 2
+            }
+        ]);
 
-calculator.setViewport([-3, 3, -3, 3, -2, 2]);
+        // 3. 設定初始視角，讓莫比烏斯環以最佳角度呈現
+        calculator.setViewport([-3, 3, -3, 3, -2, 2]);
     </script>
 </body>
 </html>
